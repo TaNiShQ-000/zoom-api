@@ -7,34 +7,34 @@ const AUTH_URL = "https://zoom.us/oauth/authorize?response_type=code&client_id=P
 
 
 export default function Login() {
-const img = "https://w.forfun.com/fetch/12/129a2b0c9a5d091c1799e3dae4a82680.jpeg"
-const logo = "https://www.freepnglogos.com/uploads/spotify-logo-png/spotify-icon-marilyn-scott-0.png"
-const img2 = "https://w.forfun.com/fetch/cd/cd3076a50f0c2b99b443f0d8170b47b1.jpeg"
+const img3 = "https://images.thequint.com/thequint%2F2020-04%2Fb2a76fd7-0a75-4a14-a92b-8851633a8dbc%2Fzoom.jpg?rect=0%2C0%2C2000%2C1125&auto=format%2Ccompress&fmt=webp&width=120&w=1200"
   return (
-    <div 
-      class="d-flex justify-content-center align-items-center"
+<div
+      className="d-flex flex-column align-items-center justify-content-center"
       style={{
         minHeight: '100vh',
-        backgroundImage:`url(${img2})`,
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        paddingTop: '15vh',
-        paddingLeft: '5.5vh'
-
-    }}
-    >
-      <a className='btn btn-success btn-lg' 
-      style={{
-        background: 'transparent',
-        // backgroundImage:`url(${logo})`,
+        background: 'linear-gradient(to right, #6A11CB, #2575FC)',
+        padding: '15vh 5.5vh',
+        boxShadow: '0px 0px 10px rgba(0, 0, 0, 0.2)',
+        borderRadius: '10px',
         color: 'white',
-        border: '2px solid white'
-    }}
-
-      script={{
-        innerHeight:'80px',
-      }} 
-      href={AUTH_URL}>Login with Spotify</a>
+      }}
+    >
+      <a
+        className='btn btn-success btn-lg'
+        style={{
+          background: 'white',
+          color: '#2575FC',
+          border: '2px solid white',
+          padding: '15px 30px',
+          borderRadius: '5px',
+          textDecoration: 'none',
+        }}
+        href={AUTH_URL}
+      >
+        Login with Zoom
+      </a>
     </div>
+
   )
 }

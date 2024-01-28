@@ -10,47 +10,50 @@ const app = express();
 app.use(cors())
 app.use(bodyParser.json())
 
+let routeAccessed = false;
 
 app.post('/login', async (req,res) =>{
   console.log('request recieved for LOGIN')
-  const code = req.body.code
-  
-  const zoomTokenUrl = 'https://zoom.us/oauth/token';
-  const clientId = 'P6LQEOJSQK2sjDpxHIncuw';
-  const clientSecret = 'fQn2XOSFH17PrRxx3HIdd5o02SXtcaN0';
-  const authHeader = Buffer.from(`${clientId}:${clientSecret}`).toString('base64');
+  if (routeAccessed) {
+    const code = req.body.code
+    
+    const zoomTokenUrl = 'https://zoom.us/oauth/token';
+    const clientId = 'P6LQEOJSQK2sjDpxHIncuw';
+    const clientSecret = 'fQn2XOSFH17PrRxx3HIdd5o02SXtcaN0';
+    const authHeader = Buffer.from(`${clientId}:${clientSecret}`).toString('base64');
 
-  const requestBody = new URLSearchParams({
-    code: code,
-    grant_type: 'authorization_code',
-    redirect_uri: 'http://localhost:3000',
-  });
-  
-  const requestHeaders = new Headers({
-    'Authorization': `Basic ${authHeader}`,
-    'Content-Type': 'application/x-www-form-urlencoded',
-  });
-  
-  fetch(zoomTokenUrl, {
-    method: 'POST',
-    headers: requestHeaders,
-    body: requestBody,
-  })
-    .then(response => response.json())
-    .then(data => {
-      console.log('Response Data:', data);
-      res.json(data);
-    })
-    .catch(error => {
-      console.error('Error:', error);
-      res.status(500).json({ error: 'Internal Server Error' });
+    const requestBody = new URLSearchParams({
+      code: code,
+      grant_type: 'authorization_code',
+      redirect_uri: 'http://localhost:3000',
     });
-  
+    
+    const requestHeaders = new Headers({
+      'Authorization': `Basic ${authHeader}`,
+      'Content-Type': 'application/x-www-form-urlencoded',
+    });
+    
+    fetch(zoomTokenUrl, {
+      method: 'POST',
+      headers: requestHeaders,
+      body: requestBody,
+    })
+      .then(response => response.json())
+      .then(data => {
+        // console.log('Response Data:', data);
+        res.json(data);
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+      });
+  }
+  routeAccessed = true;
+
+  console.log('Route logic executed successfully!');
 
 
-  console.log(code)
 
-  
   // const requestBody = { // axios  always getting internal error
   //     code: code,
   //     grant_type: "authorization_code",
@@ -88,6 +91,43 @@ app.post('/login', async (req,res) =>{
 
   //   const accessToken = tokenResponse.data.access_token;
 })
+
+app.post('/create-session', async (req, res) => {
+  try {
+    // Use the access_token obtained during authentication
+    const accessToken = req.body.accessT;
+    const agenda = req.body.agenda;
+    const topic =req.body.topic;
+    const duration =req.body.duration;
+    const scheduleFor= req.body.scheduleFor;
+    const password =req.body.password;
+    // Make a POST request to Zoom API to create a session
+    const response = await axios.post(
+      'https://api.zoom.us/v2/users/me/meetings',
+      {
+        agenda: agenda,
+        // topic:topic,
+        // duration: 60, // Scheduled meeting
+        // schedule_for : "tanishq.jaiswal000@gmail.com",
+        // default_password: false,
+        // password : "hi_tanishq",
+        // type: 2,
+        // start_time: "2022-03-25T07:32:55Z",
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
+    );
+
+    // Send the Zoom meeting details to the client
+    res.json(response.data);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Error creating Zoom session' });
+  }
+});
 
 
 app.listen(PORT, ()=>{console.log(`server started at port ${PORT}`)});
