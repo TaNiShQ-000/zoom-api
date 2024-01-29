@@ -101,17 +101,19 @@ app.post('/create-session', async (req, res) => {
     const duration =req.body.duration;
     const scheduleFor= req.body.scheduleFor;
     const password =req.body.password;
+    const meeting_time = req.body.password;
     // Make a POST request to Zoom API to create a session
     const response = await axios.post(
       'https://api.zoom.us/v2/users/me/meetings',
       {
         agenda: agenda,
-        // topic:topic,
-        // duration: 60, // Scheduled meeting
-        // schedule_for : "tanishq.jaiswal000@gmail.com",
-        // default_password: false,
-        // password : "hi_tanishq",
-        // type: 2,
+        topic:topic,
+        duration: duration, // Scheduled meeting
+        // schedule_for :scheduleFor,
+        default_password: false,
+        password : password,
+        type: 2,
+        start_time: meeting_time,
         // start_time: "2022-03-25T07:32:55Z",
       },
       {
@@ -122,6 +124,7 @@ app.post('/create-session', async (req, res) => {
     );
 
     // Send the Zoom meeting details to the client
+    console.log(response.data)
     res.json(response.data);
   } catch (error) {
     console.error(error);

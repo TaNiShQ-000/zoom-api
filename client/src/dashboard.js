@@ -1,40 +1,17 @@
-import React,{useState, useEffect} from 'react'
+import React from 'react'
 import useAuth  from "./auth"
-import axios from "axios"
-import CreateZoomSession from './CreateZoomSession';
+import ScheduleZoomSession from './scheduleZoomSession';
+import JoinMeeting from "./joinMeeting"
+import CreateZoomSession from './createSession';
 
 
 export default function Dashboard({code}) {
-  const accessToken = useAuth(code);
-
-  // const [accessToken, setAccessToken] = useState()
-  // const [refreshToken, setRefreshToken] = useState()
-  // const [expiresIn, setExpiresIn] = useState()
-  // code = code
-  // useEffect(() => { 
-  //   console.log("hello")
-  //   console.log("Effect triggered with code:", code);
-  //   axios
-  //       .post("http://localhost:3001/login", {
-  //         code,
-  //       })
-  //       .then(res => {
-  //         setAccessToken(res.data.access_token)
-  //         setRefreshToken(res.data.refresh_token)
-  //         setExpiresIn(res.data.expires_in)
-  //       })
-  // }, [code]);
-    // Make an Axios request using the form data
-   
-    
-
-
+  const accessToken = useAuth(code);  
   return (
    <div>
+      <ScheduleZoomSession accessToken={accessToken} />
+      <JoinMeeting  />
       <CreateZoomSession accessToken={accessToken} />
     </div>
   )
-
-  
-  return <div>{accessToken}</div>
 }
